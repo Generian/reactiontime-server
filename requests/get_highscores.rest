@@ -1,1 +1,1 @@
-GET https://reactiontime-server.herokuapp.com/api/highscores
+GET http://localhost:3001/api/highscores

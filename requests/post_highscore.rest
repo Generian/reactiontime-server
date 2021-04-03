@@ -1,1 +1,7 @@
 POST http://localhost:3001/api/highscores
+Content-Type: application/json
+
+{
+  "time": 200,
+  "name": "Basti"
+}
