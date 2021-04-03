@@ -44,7 +44,7 @@ app.post('/api/highscores/qualify', (request, response) => {
 
   Highscore.find( { time: { $lte: body.time } } ).then(highscores => {
     response.json({
-      "qualifies": highscores.length < 7,
+      "qualifies": highscores.length < 20,
       "rank": highscores.length + 1,
     })
   })
