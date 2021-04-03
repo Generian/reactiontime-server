@@ -36,7 +36,6 @@ app.post('/api/highscores', (request, response) => {
 
 app.post('/api/highscores/qualify', (request, response) => {
   const body = request.body
-  console.log(request)
 
   if (body.time === undefined) {
     return response.status(400).json({ error: 'content missing' })
