@@ -22,6 +22,7 @@ const highscoreSchema = new mongoose.Schema({
   time: Number,
   date: Number,
   name: String,
+  highscoreType: String,
 })
 
 highscoreSchema.set('toJSON', {
