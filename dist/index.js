@@ -25,14 +25,16 @@ app.get('/api/highscores', (request, response) => {
 });
 app.post('/api/highscores', (request, response) => {
     const body = request.body;
-    if (body.time === undefined || body.name === undefined) {
+    if (body.time === undefined || body.name === undefined || body.highscoreType === undefined) {
         return response.status(400).json({ error: 'content missing' });
     }
-    Highscore.find().then(highscores => {
+    const filter = body.highscoreType === "THREE_AVG" ? { time: { $lte: body.time }, highscoreType: "THREE_AVG" } : { time: { $lte: body.time }, highscoreType: { $not: /THREE_AVG/ } };
+    Highscore.find(filter).then(highscores => {
         const h = new Highscore({
             "time": body.time,
             "date": Date.now(),
             "name": body.name,
+            "highscoreType": body.highscoreType,
         });
         if (highscores.length < LEADERBOARD_LENGTH) {
             try {
@@ -85,10 +87,11 @@ app.post('/api/highscores', (request, response) => {
 });
 app.post('/api/highscores/qualify', (request, response) => {
     const body = request.body;
-    if (body.time === undefined) {
+    if (body.time === undefined || body.highscoreType === undefined) {
         return response.status(400).json({ error: 'content missing' });
     }
-    Highscore.find({ time: { $lte: body.time } }).then(highscores => {
+    const filter = body.highscoreType === "THREE_AVG" ? { time: { $lte: body.time }, highscoreType: "THREE_AVG" } : { time: { $lte: body.time }, highscoreType: { $not: /THREE_AVG/ } };
+    Highscore.find(filter).then(highscores => {
         response.json({
             "qualifies": highscores.length < LEADERBOARD_LENGTH,
             "rank": highscores.length + 1,
