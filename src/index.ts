@@ -37,7 +37,7 @@ app.post('/api/highscores', (request, response) => {
     return response.status(400).json({ error: 'content missing' })
   }
 
-  const filter = body.highscoreType === "THREE_AVG" ? { time: { $lte: body.time }, highscoreType: "THREE_AVG" } : { time: { $lte: body.time }, highscoreType: { $not: /THREE_AVG/ } } 
+  const filter = body.highscoreType === "THREE_AVG" ? { highscoreType: "THREE_AVG" } : { highscoreType: { $not: /THREE_AVG/ } } 
 
   Highscore.find( filter ).then(highscores => {
 
@@ -47,7 +47,7 @@ app.post('/api/highscores', (request, response) => {
       "name": body.name,
       "highscoreType": body.highscoreType,
     })
-
+    console.log(highscores.length)
     if (highscores.length < LEADERBOARD_LENGTH) {
       try {      
         h.save().then(savedHighscore => {
