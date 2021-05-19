@@ -28,7 +28,7 @@ app.post('/api/highscores', (request, response) => {
     if (body.time === undefined || body.name === undefined || body.highscoreType === undefined) {
         return response.status(400).json({ error: 'content missing' });
     }
-    const filter = body.highscoreType === "THREE_AVG" ? { time: { $lte: body.time }, highscoreType: "THREE_AVG" } : { time: { $lte: body.time }, highscoreType: { $not: /THREE_AVG/ } };
+    const filter = body.highscoreType === "THREE_AVG" ? { highscoreType: "THREE_AVG" } : { highscoreType: { $not: /THREE_AVG/ } };
     Highscore.find(filter).then(highscores => {
         const h = new Highscore({
             "time": body.time,
@@ -36,6 +36,7 @@ app.post('/api/highscores', (request, response) => {
             "name": body.name,
             "highscoreType": body.highscoreType,
         });
+        console.log(highscores.length);
         if (highscores.length < LEADERBOARD_LENGTH) {
             try {
                 h.save().then(savedHighscore => {
@@ -49,7 +50,7 @@ app.post('/api/highscores', (request, response) => {
         }
         else {
             try {
-                Highscore.find().sort({ time: -1 }).limit(1).then(s => {
+                Highscore.find(filter).sort({ time: -1 }).limit(1).then(s => {
                     const slowest = s[0];
                     if (slowest.time > h.time) {
                         Highscore.deleteOne({ "time": slowest.time })
