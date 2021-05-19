@@ -59,7 +59,7 @@ app.post('/api/highscores', (request, response) => {
       }    
     } else {
       try {
-        Highscore.find().sort({time:-1}).limit(1).then(s => { 
+        Highscore.find( filter ).sort({time:-1}).limit(1).then(s => { 
           const slowest = s[0]
           if (slowest.time > h.time) {
             Highscore.deleteOne( { "time" : slowest.time } )
